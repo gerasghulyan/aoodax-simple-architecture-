@@ -1,0 +1,44 @@
+project(":migration:migration-changelog") {
+    sonarqube.skipProject = true
+
+    dependencies {
+        implementation project(":persistence:persistence-core")
+        implementation "org.mongodb:mongodb-driver-sync"
+        implementation "io.mongock:mongodb-springdata-v3-driver"
+        implementation "io.mongock:mongock-springboot"
+    }
+}
+
+project(":migration:migration-executable") {
+    apply plugin: "org.springframework.boot"
+    apply plugin: "com.google.cloud.tools.jib"
+
+    jib {
+        from {
+            image = "openjdk:17"
+        }
+        to {
+            image = "${dockerRegistry}/${rootProject.name}-migration"
+            tags = imageTags()
+        }
+        container {
+            jvmFlags = ["-XX:MaxRAMPercentage=75"]
+            ports = ["8080"]
+            workingDirectory = "/app"
+        }
+    }
+
+    tasks.named("bootJar") {
+        mainClass = "${platformGroup}.migration.MigrationApplication"
+        manifest {
+            attributes(
+                    "Implementation-Version": platformVersion
+            )
+        }
+    }
+
+    dependencies {
+        implementation project(":migration:migration-changelog")
+        implementation "org.springframework.boot:spring-boot-starter"
+    }
+}

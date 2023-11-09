@@ -1,0 +1,113 @@
+project(":api:rest:api-rest-model") {
+    dependencies {
+        api "com.aoodax.jvm.common:rest-dto"
+        implementation "com.fasterxml.jackson.core:jackson-databind"
+        implementation 'jakarta.annotation:jakarta.annotation-api'
+    }
+}
+
+
+//project(":api:rest:api-rest-facade") {
+//
+//    dependencies {
+//        api project(":api:rest:api-rest-model")
+//        api project(":business:business-core")
+//        runtimeOnly project(":business:business-impl")
+//        implementation "org.springframework:spring-context"
+//        implementation "org.springframework.boot:spring-boot-starter-web"
+//        testImplementation project(":test-toolkit:test-toolkit-rest-resource-unit")
+//        testImplementation project(":test-toolkit:test-toolkit-business-unit")
+//    }
+//
+//    test {
+//        testLogging {
+//            events "passed", "skipped", "failed"
+//        }
+//    }
+//}
+
+project(":api:rest:api-rest-resource") {
+
+    dependencies {
+        implementation project(":facade:facade-core")
+        runtimeOnly project(":facade:facade-impl")
+        implementation "org.springframework.boot:spring-boot-starter-web"
+    }
+}
+
+project(":api:rest:api-rest-resource-executable") {
+
+    apply plugin: "org.springframework.boot"
+    apply plugin: "com.google.cloud.tools.jib"
+
+    tasks.named("bootJar") {
+        mainClass = "${group}.rest.executable.AoodaxPlatformApplication"
+        manifest {
+            attributes(
+                    "Implementation-Version": platformVersion
+            )
+        }
+    }
+
+    jib {
+        from {
+            image = "openjdk:17"
+        }
+        to {
+            image = "${dockerRegistry}/${rootProject.name}-api"
+            tags = imageTags()
+        }
+        container {
+            jvmFlags = ["-XX:MaxRAMPercentage=75"]
+            ports = ["8080"]
+            workingDirectory = "/app"
+        }
+    }
+
+    dependencies {
+        implementation project(":api:rest:api-rest-resource")
+        api "com.aoodax.jvm.common:persistence-mongo"
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+//        implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+        implementation "org.springframework.boot:spring-boot-starter-validation"
+    }
+}
+
+project(":api:rest:api-rest-resource-integration-test") {
+
+    dependencies {
+        testImplementation project(":api:rest:api-rest-resource")
+//        testImplementation project(":api:rest:api-rest-client")
+//        testImplementation project(":api:rest:api-rest-facade")
+        testImplementation project(":migration:migration-changelog")
+        testImplementation project(":test-toolkit:test-toolkit-business-integration")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.boot:spring-boot-starter-web"
+        testImplementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+        testImplementation 'jakarta.annotation:jakarta.annotation-api'
+        testImplementation "org.testcontainers:mongodb"
+        testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+        testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+        testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        testImplementation project(":test-toolkit:test-toolkit-rest-resource-integration")
+//        testImplementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+        testRuntimeOnly project(":business:business-impl")
+        testRuntimeOnly "ch.qos.logback:logback-classic"
+        testRuntimeOnly "org.postgresql:postgresql"
+    }
+
+    test {
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}
+
+//project(":api:rest:api-rest-client") {
+//    dependencies {
+//        api project(":api:rest:api-rest-model")
+////        api "org.springframework.cloud:spring-cloud-starter-openfeign"
+//    }
+//}

@@ -1,0 +1,14 @@
+project(":persistence:persistence-core") {
+
+    dependencies {
+        api "com.aoodax.jvm.common:persistence-mongo"
+//        api "org.springframework.boot:spring-boot-starter-data-mongodb"
+    }
+}
+
+project(":persistence:persistence-impl") {
+
+    dependencies {
+        implementation project(":persistence:persistence-core")
+    }
+}

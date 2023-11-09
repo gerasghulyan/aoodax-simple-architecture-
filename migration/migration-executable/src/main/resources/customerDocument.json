@@ -1,0 +1,130 @@
+{
+    "mappings" : {
+        "dynamic" : true,
+        "fields" : {
+            "connections.connectedCustomerUuid" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "analyzer" : "lucene.keyword",
+                    "searchAnalyzer" : "lucene.keyword",
+                    "type" : "string"
+                }
+            ],
+            "customerUuid" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "analyzer" : "lucene.keyword",
+                    "searchAnalyzer" : "lucene.keyword",
+                    "type" : "string"
+                }
+            ],
+            "displayName" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 2,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string"
+                }
+            ],
+            "email" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "analyzer" : "lucene.keyword",
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 2,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string",
+                    "analyzer" : "lucene.keyword"
+                }
+            ],
+            "firstName" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 2,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string"
+                }
+            ],
+            "lastName" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 2,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string"
+                }
+            ],
+            "phoneNumber" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "analyzer" : "lucene.keyword",
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 7,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string",
+                    "analyzer" : "lucene.keyword"
+                }
+            ],
+            "spaceName" : [
+                {
+                    "dynamic" : true,
+                    "type" : "document"
+                },
+                {
+                    "foldDiacritics" : true,
+                    "maxGrams" : 15,
+                    "minGrams" : 2,
+                    "tokenization" : "edgeGram",
+                    "type" : "autocomplete"
+                },
+                {
+                    "type" : "string",
+                    "analyzer" : "lucene.keyword"
+                }
+            ]
+        }
+    }
+}
